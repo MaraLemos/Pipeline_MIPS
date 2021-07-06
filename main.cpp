@@ -31,6 +31,12 @@ bool novaOp() {
     return false;
 }
 
+/**
+ * Identifica qual a instrução lida e converte os campos fixos de acordo com seu tipo(R,I ou J)
+ * @return bool
+ *
+ * @author Mara de Lemos Gomes
+ */
 bool identificaInstrucao(string campo, int* instrucao){
 
 	if(campo == "add"){ //Tipo R
@@ -136,8 +142,8 @@ bool identificaInstrucao(string campo, int* instrucao){
 		for(int i=26;i < 32; i++)
 			instrucao[i] = 0;
 
-		//shamt 00000
-		for(int i=6;i < 11; i++)
+		//rs 00000
+		for(int i=20;i < 26;i++)
 			instrucao[i] = 0;
 
 		//funct 000000
@@ -156,11 +162,6 @@ bool identificaInstrucao(string campo, int* instrucao){
 		instrucao[27] = 0;
 		instrucao[26] = 0;
 
-		//rs
-
-		//rt
-
-		//constant
 		return true;
 	}
 
@@ -289,6 +290,15 @@ bool identificaInstrucao(string campo, int* instrucao){
 	return false;
 }
 
+/**
+ * Identifica o registrador recebido como parametro e armazena o valor apropriado a instrucao em binario
+ * @param campo
+ * @param instrucao
+ * @param posini
+ * @param posfinal
+ *
+ * @author Mara de Lemos Gomes
+ */
 void coverteRegistrador(string campo,int *instrucao,int posini,int posfinal){
 
 	
@@ -519,6 +529,34 @@ void coverteRegistrador(string campo,int *instrucao,int posini,int posfinal){
 	
 }
 
+/**
+ * Converte um inteiro para binario e armazena o resultado em um vetor
+ * @param num
+ * @return vet
+ *
+ * @author Mara de Lemos Gomes
+ */
+int* decimalparaBin(int num, int tam){
+	int* vet = new int[tam];
+
+	for(int j=0;j < tam;j++)
+		vet[j] = 0;
+
+	int i = (tam-1);
+	while(num != 0){
+		vet[i] = (num % 2);
+		num = (num/2);
+		i--;
+	}
+	return vet;
+}
+
+/**
+ * Converte uma instrução para binario
+ * @param linha
+ *
+ * @author Mara de Lemos Gomes
+ */
 void converteInstrucao(string linha){
 
 	int *instrucao = new int[32];
@@ -534,16 +572,49 @@ void converteInstrucao(string linha){
     if(identificaInstrucao(campo, instrucao)){
 
     	if(a == "add" || a == "sub" || a == "and"  || a == "or" || a == "slt"){
-    		cout << "Entrou" << endl;
 	    	campo = strtok(NULL, ",");
-	    	cout << campo << endl;
+	    	//rd
 	    	coverteRegistrador(campo,instrucao,11,15);
 	    	campo = strtok(NULL, ",");
-	    	cout << campo << endl;
+	    	//rs
 	    	coverteRegistrador(campo,instrucao,21,25);
 	    	campo = strtok(NULL, " #");
-	    	cout << campo << endl;
+	    	//rt
 	    	coverteRegistrador(campo,instrucao,16,20);
+	    }
+	    if(a == "sll"){
+	    	//rd
+	    	campo = strtok(NULL, ",");
+	    	coverteRegistrador(campo,instrucao,11,15);
+
+	    	//rt
+	    	campo = strtok(NULL, ",");
+	    	coverteRegistrador(campo,instrucao,16,20);
+
+	    	//shamt
+	    	campo = strtok(NULL, " #");
+	    	int *shamt,j = 0;
+	    	shamt = decimalparaBin(atoi(campo),5);
+	    	for(int i=10; i>=6;i--){
+	    		instrucao[i] = shamt[j];
+	    		j++;
+	    	}
+	    }
+	    if(a == "addi"){
+	    	//rs
+	    	campo = strtok(NULL, ",");
+	    	coverteRegistrador(campo,instrucao,21,25);
+	    	//rt
+	    	campo = strtok(NULL, ",");
+	    	coverteRegistrador(campo,instrucao,16,20);
+	    	//constant
+	    	campo = strtok(NULL, " #");
+	    	int *constant, j = 0;
+	    	constant = decimalparaBin(atoi(campo),16);
+	    	for(int i=15; i>=0;i--){
+	    		instrucao[i] = constant[j];
+	    		j++;
+	    	}
 	    }
 
     }else{
@@ -555,6 +626,11 @@ void converteInstrucao(string linha){
     	cout << instrucao[i];
 }
 
+/**
+ * Solicita ao usuario o nome de um arquivo de texto e faz a leitura do mesmo
+ *
+ * @author Mara de Lemos Gomes
+ */
 void leArquivo(){
 
     string nome,linha;
