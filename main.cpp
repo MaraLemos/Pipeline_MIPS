@@ -18,7 +18,7 @@ using namespace std;
  * @author Mara de Lemos Gomes
  */
 size_t binarioParaDec(int *vet){
-    size_t decimal = 0; //size_t entende representações negativas
+    size_t decimal = 0; 
 
     for(int i=0; i < 32; i++){
         decimal += vet[i]*pow(2,i);
@@ -86,7 +86,6 @@ void leArquivo(Mips *mips){
         		mips->armazenaInstrucao(instrucaoCodificada);
         	}
         }
-        //mips->imprimeInstrucoes();
     }
 }
 
@@ -179,7 +178,7 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
-
+            	
             }
             if(novaOp())
                 menu(mips);
@@ -189,6 +188,11 @@ void menu(Mips *mips){
             printf("\e[H\e[2J");
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
+            }else{
+            	for(int i=0; i < mips->getQtdInstrucoes(); i++){
+            		mips->estagio1();
+            		mips->estagio2();
+            	}
             }
             if(novaOp())
                 menu(mips);
