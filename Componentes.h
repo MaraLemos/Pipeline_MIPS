@@ -31,4 +31,5 @@ struct Control
     int MemWrite;
     int RegWrite;
     int MemtoReg;
+    int jump;
 };

@@ -45,15 +45,25 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 1;
 		    unidade_controle.MemtoReg = 0;
+		    unidade_controle.jump = 0;
         break;
 
         case 2: //j
-        break;
-
         case 3: // jal
+        	unidade_controle.regDst = 2; //O num 2 representa o não importa
+		    unidade_controle.ALUOp1 = 2;
+		    unidade_controle.ALUOp0 = 2;
+		    unidade_controle.ALUSrc = 2;
+		    unidade_controle.Branch = 2;
+		    unidade_controle.MemRead = 0;
+		    unidade_controle.MemWrite = 0;
+		    unidade_controle.RegWrite = 0;
+		    unidade_controle.MemtoReg = 2;
+		    unidade_controle.jump = 1;
         break;
 
         case 4: // beq
+        case 5: // bne
         	unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 1;
@@ -63,12 +73,20 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
-        break;
-
-        case 5: // bne
+		    unidade_controle.jump = 0;
         break;
 
         case 8: // addi
+        	unidade_controle.regDst = 0;
+		    unidade_controle.ALUOp1 = 0;
+		    unidade_controle.ALUOp0 = 0;
+		    unidade_controle.ALUSrc = 1;
+		    unidade_controle.Branch = 0;
+		    unidade_controle.MemRead = 0;
+		    unidade_controle.MemWrite = 0;
+		    unidade_controle.RegWrite = 1;
+		    unidade_controle.MemtoReg = 0;
+		    unidade_controle.jump = 0;
         break;
 
         case 35: // lw
@@ -81,6 +99,7 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 1;
 		    unidade_controle.MemtoReg = 1;
+		    unidade_controle.jump = 0;
         break;
 
         case 43: // sw
@@ -93,6 +112,7 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 1;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
+		    unidade_controle.jump = 0;
         break;        
 	}
 }
@@ -121,7 +141,8 @@ void Mips::estagio2(){
 
 	rp2.pc = rp1.pc;
 
-	if(opcode == 2 || opcode == 3){ //Tipo-J
+	//Desvio incondicional
+	if(unidade_controle.jump == 1){
 
 		rp2.pc = (rp1.instrucao & 0x03ffffff);
 
@@ -145,4 +166,14 @@ void Mips::estagio2(){
 	rp2.datars = banco_registradores[rs];
 	rp2.datart = banco_registradores[rt];
 	rp2.constant_or_address = constant_or_address;
+	rp2.RegWrite = unidade_controle.RegWrite;
+    rp2.MemtoReg = unidade_controle.MemtoReg;
+    rp2.Branch = unidade_controle.Branch;
+    rp2.MemRead = unidade_controle.MemRead;
+    rp2.MemWrite = unidade_controle.MemWrite;
+    rp2.regDst = unidade_controle.regDst;
+    rp2.ALUOp1 = unidade_controle.ALUOp1;
+    rp2.ALUOp0 = unidade_controle.ALUOp0;
+    rp2.ALUSrc = unidade_controle.ALUSrc;
 }
+
