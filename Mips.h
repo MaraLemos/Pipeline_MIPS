@@ -31,6 +31,7 @@ class Mips{
 		//Estágios pipeline
 		void estagio1();
 		void estagio2();
+		void estagio3();
 };
 
 #endif

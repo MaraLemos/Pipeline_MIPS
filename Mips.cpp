@@ -45,25 +45,15 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 1;
 		    unidade_controle.MemtoReg = 0;
-		    unidade_controle.jump = 0;
         break;
 
         case 2: //j
+        break;
+
         case 3: // jal
-        	unidade_controle.regDst = 2; //O num 2 representa o não importa
-		    unidade_controle.ALUOp1 = 2;
-		    unidade_controle.ALUOp0 = 2;
-		    unidade_controle.ALUSrc = 2;
-		    unidade_controle.Branch = 2;
-		    unidade_controle.MemRead = 0;
-		    unidade_controle.MemWrite = 0;
-		    unidade_controle.RegWrite = 0;
-		    unidade_controle.MemtoReg = 2;
-		    unidade_controle.jump = 1;
         break;
 
         case 4: // beq
-        case 5: // bne
         	unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 1;
@@ -73,20 +63,12 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
-		    unidade_controle.jump = 0;
+        break;
+
+        case 5: // bne
         break;
 
         case 8: // addi
-        	unidade_controle.regDst = 0;
-		    unidade_controle.ALUOp1 = 0;
-		    unidade_controle.ALUOp0 = 0;
-		    unidade_controle.ALUSrc = 1;
-		    unidade_controle.Branch = 0;
-		    unidade_controle.MemRead = 0;
-		    unidade_controle.MemWrite = 0;
-		    unidade_controle.RegWrite = 1;
-		    unidade_controle.MemtoReg = 0;
-		    unidade_controle.jump = 0;
         break;
 
         case 35: // lw
@@ -99,7 +81,6 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 1;
 		    unidade_controle.MemtoReg = 1;
-		    unidade_controle.jump = 0;
         break;
 
         case 43: // sw
@@ -112,7 +93,6 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 1;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
-		    unidade_controle.jump = 0;
         break;        
 	}
 }
@@ -141,8 +121,7 @@ void Mips::estagio2(){
 
 	rp2.pc = rp1.pc;
 
-	//Desvio incondicional
-	if(unidade_controle.jump == 1){
+	if(opcode == 2 || opcode == 3){ //Tipo-J
 
 		rp2.pc = (rp1.instrucao & 0x03ffffff);
 
@@ -166,14 +145,65 @@ void Mips::estagio2(){
 	rp2.datars = banco_registradores[rs];
 	rp2.datart = banco_registradores[rt];
 	rp2.constant_or_address = constant_or_address;
-	rp2.RegWrite = unidade_controle.RegWrite;
-    rp2.MemtoReg = unidade_controle.MemtoReg;
-    rp2.Branch = unidade_controle.Branch;
-    rp2.MemRead = unidade_controle.MemRead;
-    rp2.MemWrite = unidade_controle.MemWrite;
-    rp2.regDst = unidade_controle.regDst;
-    rp2.ALUOp1 = unidade_controle.ALUOp1;
-    rp2.ALUOp0 = unidade_controle.ALUOp0;
-    rp2.ALUSrc = unidade_controle.ALUSrc;
 }
 
+void Mips::estagio3() {
+	// lê os valores do ALUOp
+	int ALUOp0 = unidade_controle.ALUOp0;
+	int ALUOp1 = unidade_controle.ALUOp1;
+
+	// gera ALU control
+	int ALU_control;
+
+	if(ALUOp0 == 0 && ALUOp1 == 0) // lw, sw
+		ALU_control = 2;
+	
+	else if(ALUOp0 == 0 && ALUOp1 == 1) // beq
+		ALU_control = 6;
+	
+	else if(ALUOp0 == 1 && ALUOp1 == 0) { // Tipo-R
+		int funct = (rp1.instrucao & 0x3f);
+
+		if(funct == 32) // add
+			ALU_control = 2;
+		else if(funct == 34) // sub
+			ALU_control= 6;
+		else if(funct == 36) // and
+			ALU_control = 0;
+		else if(funct == 37) // or
+			ALU_control = 1;
+		else if(funct == 42) // slt
+			ALU_control = 7;
+	}
+
+	// gera resultado da ALU
+	int ALU_result;
+
+	int op1 = rp2.datars;
+	int op2 = rp2.datart;
+
+	if(unidade_controle.ALUSrc = 1)
+		op2 = rp2.constant_or_address;
+
+	
+	if(ALU_control == 2) // add
+		ALU_result = op1 + op2;
+	else if(ALU_control == 6) // sub
+		ALU_result = op1 - op2;
+	else if(ALU_control == 0) // and
+		ALU_result = op1 & op2;
+	else if(ALU_control == 1) // or
+		ALU_result = op1 | op2;
+	else if(ALU_control == 7) // slt
+		ALU_result = (op1 < op2) ? 1 : 0;
+
+	//armazena informações em registrador EX_MEM
+	rp3.pc = rp2.pc + (rp2.constant_or_address >> 2); // não tenho certeza
+	if(unidade_controle.regDst == 0)
+		rp3.rd_rt = rp2.rt;
+	else if(unidade_controle.regDst == 1)
+		rp3.rd_rt = rp2.rd;
+	rp3.ALU_result = ALU_result;
+	rp3.ALU_zero = (ALU_result == 0 || ALU_control == 6) ? 1 : 0; // não tenho certeza
+	rp3.datart = rp2.datart;
+}

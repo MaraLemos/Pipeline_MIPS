@@ -13,7 +13,11 @@ struct ID_EX{
 };
 
 struct EX_MEM{
-	
+	int pc;
+    int rd_rt;
+    int ALU_result;
+    int ALU_zero;
+    int datart;
 };
 
 struct MEM_WB{
