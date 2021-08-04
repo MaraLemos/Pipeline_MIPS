@@ -127,7 +127,7 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
 			unidade_controle.jump = 0;
-        break;        
+        break;
 	}
 }
 
@@ -192,10 +192,10 @@ void Mips::estagio3() {
 
 	if(ALUOp0 == 0 && ALUOp1 == 0) // lw, sw
 		ALU_control = 2;
-	
+
 	else if(ALUOp0 == 0 && ALUOp1 == 1) // beq
 		ALU_control = 6;
-	
+
 	else if(ALUOp0 == 1 && ALUOp1 == 0) { // Tipo-R
 		int funct = (rp1.instrucao & 0x3f);
 
@@ -220,7 +220,7 @@ void Mips::estagio3() {
 	if(unidade_controle.ALUSrc = 1)
 		op2 = rp2.constant_or_address;
 
-	
+
 	if(ALU_control == 2) // add
 		ALU_result = op1 + op2;
 	else if(ALU_control == 6) // sub
@@ -241,4 +241,20 @@ void Mips::estagio3() {
 	rp3.ALU_result = ALU_result;
 	rp3.ALU_zero = (ALU_result == 0 || ALU_control == 6) ? 1 : 0; // não tenho certeza
 	rp3.datart = rp2.datart;
+}
+
+void Mips::estagio4() {
+	if(unidade_controle.MemWrite)
+		this->memoria_dados[rp3.ALU_result] = rp3.datart;
+	else if(unidade_controle.MemRead)
+		rp4.data = this->memoria_dados[rp3.ALU_result];
+	rp4.rd_rt = rp3.rd_rt;
+	rp4.ALU_result = rp3.ALU_result;
+	if(unidade_controle.jump)
+		rp1.pc =rp4.pc;
+}
+
+void Mips::estagio5() {
+	if(unidade_controle.MemtoReg)
+		banco_registradores[rp3.ALU_result] = rp3.data;
 }

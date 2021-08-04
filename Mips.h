@@ -6,7 +6,7 @@
 #include "Componentes.h"
 
 class Mips{
-	
+
 	private:
 		int pc, qtdInstrucoes;
 		long int memoria_instrucoes[128]; //512bytes == 4096 bits
@@ -32,6 +32,8 @@ class Mips{
 		void estagio1();
 		void estagio2();
 		void estagio3();
+		void estagio4();
+		void estagio5();
 };
 
 #endif

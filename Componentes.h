@@ -21,7 +21,10 @@ struct EX_MEM{
 };
 
 struct MEM_WB{
-
+  int pc;
+  int rd_rt;
+  int ALU_result;
+  int data;
 };
 
 struct Control
