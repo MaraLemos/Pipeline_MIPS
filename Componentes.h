@@ -10,14 +10,35 @@ struct ID_EX{
 	int datars;
 	int datart;
 	int constant_or_address;
+
+  //WB
+  int RegWrite;
+  int MemtoReg;
+  //M
+  int Branch;
+  int MemRead;
+  int MemWrite;
+  //EX
+  int regDst;
+  int ALUOp1;
+  int ALUOp0;
+  int ALUSrc;
 };
 
 struct EX_MEM{
 	int pc;
-    int rd_rt;
-    int ALU_result;
-    int ALU_zero;
-    int datart;
+  int rd_rt;
+  int ALU_result;
+  int ALU_zero;
+  int datart;
+
+  //WB
+  int RegWrite;
+  int MemtoReg;
+  //M
+  int Branch;
+  int MemRead;
+  int MemWrite;
 };
 
 struct MEM_WB{
@@ -25,6 +46,10 @@ struct MEM_WB{
   int rd_rt;
   int ALU_result;
   int data;
+
+  //WB
+  int RegWrite;
+  int MemtoReg;
 };
 
 struct Control
