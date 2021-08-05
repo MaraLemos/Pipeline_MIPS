@@ -36,7 +36,7 @@ void Mips::geraSinaisControle(int opcode){
 	switch(opcode){
 
         case 0: //add,sub,and,or,slt,sll, jr
-	        unidade_controle.regDst = 1;
+        unidade_controle.regDst = 1;
 		    unidade_controle.ALUOp1 = 1;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 0;
@@ -45,14 +45,14 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 1;
 		    unidade_controle.MemtoReg = 0;
-			unidade_controle.jump = 0;
+				unidade_controle.jump = 0;
         break;
 
         case 2: //j
         break;
 
         case 3: // jal
-			unidade_controle.regDst = 2; //O num 2 representa o não importa
+				unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 2;
 		    unidade_controle.ALUOp0 = 2;
 		    unidade_controle.ALUSrc = 2;
@@ -65,7 +65,7 @@ void Mips::geraSinaisControle(int opcode){
         break;
 
         case 4: // beq
-        	unidade_controle.regDst = 2; //O num 2 representa o não importa
+				unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 1;
 		    unidade_controle.ALUSrc = 0;
@@ -74,11 +74,11 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 0;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
-			unidade_controle.jump = 0;
+				unidade_controle.jump = 0;
         break;
 
         case 5: // bne
-			unidade_controle.regDst = 2; //O num 2 representa o não importa
+				unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 1;
 		    unidade_controle.ALUSrc = 0;
@@ -91,7 +91,7 @@ void Mips::geraSinaisControle(int opcode){
         break;
 
         case 8: // addi
-			unidade_controle.regDst = 0;
+				unidade_controle.regDst = 0;
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 1;
@@ -104,7 +104,7 @@ void Mips::geraSinaisControle(int opcode){
         break;
 
         case 35: // lw
-        	unidade_controle.regDst = 0;
+				unidade_controle.regDst = 0;
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 1;
@@ -117,7 +117,7 @@ void Mips::geraSinaisControle(int opcode){
         break;
 
         case 43: // sw
-        	unidade_controle.regDst = 2; //O num 2 representa o não importa
+				unidade_controle.regDst = 2; //O num 2 representa o não importa
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 1;
@@ -126,7 +126,7 @@ void Mips::geraSinaisControle(int opcode){
 		    unidade_controle.MemWrite = 1;
 		    unidade_controle.RegWrite = 0;
 		    unidade_controle.MemtoReg = 2; //O num 2 representa o não importa
-			unidade_controle.jump = 0;
+				unidade_controle.jump = 0;
         break;
 	}
 }
@@ -137,10 +137,9 @@ void Mips::estagio1(){
 	long int instrucao = memoria_instrucoes[pc/4];
 
 	//Incrementa valor de pc
-	pc = pc + 4;
-
+	//pc = pc + 4;
 	//Armazena informações em registrador IF/ID
-	rp1.pc = pc;
+	rp1.pc = pc + 4;
 	rp1.instrucao = instrucao;
 }
 
@@ -249,7 +248,9 @@ void Mips::estagio4() {
 	else if(unidade_controle.MemRead)
 		rp4.data = this->memoria_dados[rp3.ALU_result];
 	if(unidade_controle.Branch && rp3.ALU_zero)
-		rp1.pc =rp4.pc;
+		this->pc = rp3.pc;
+	else
+		this->pc = rp1.pc;
 	rp4.rd_rt = rp3.rd_rt;
 	rp4.ALU_result = rp3.ALU_result;
 }

@@ -192,9 +192,9 @@ void menu(Mips *mips){
             	for(int i=0; i < mips->getQtdInstrucoes(); i++){
             		mips->estagio1();
             		mips->estagio2();
-								mips->estagio3();
-								mips->estagio4();
-								mips->estagio5();
+            		mips->estagio3();
+            		mips->estagio4();
+            		mips->estagio5();
             	}
             }
             if(novaOp())
