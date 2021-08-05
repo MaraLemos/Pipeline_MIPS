@@ -248,15 +248,16 @@ void Mips::estagio4() {
 		this->memoria_dados[rp3.ALU_result] = rp3.datart;
 	else if(unidade_controle.MemRead)
 		rp4.data = this->memoria_dados[rp3.ALU_result];
+	if(unidade_controle.Branch && rp3.ALU_zero)
+		rp1.pc =rp4.pc;
 	rp4.rd_rt = rp3.rd_rt;
 	rp4.ALU_result = rp3.ALU_result;
-  int pcOrg = 0;
-	if(unidade_controle.Branch && rp3.ALU_zero)
-// 	if(unidade_controle.jump)
-		rp1.pc =rp4.pc;
 }
 
 void Mips::estagio5() {
-	if(unidade_controle.MemtoReg)
-		banco_registradores[rp4.ALU_result] = rp4.data;
+	if(unidade_controle.RegWrite)
+		if(unidade_controle.MemtoReg)
+			banco_registradores[rp4.rd_rt] = rp4.data;
+		else
+			banco_registradores[rp4.rd_rt] = rp4.ALU_result;
 }

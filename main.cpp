@@ -18,7 +18,7 @@ using namespace std;
  * @author Mara de Lemos Gomes
  */
 size_t binarioParaDec(int *vet){
-    size_t decimal = 0; 
+    size_t decimal = 0;
 
     for(int i=0; i < 32; i++){
         decimal += vet[i]*pow(2,i);
@@ -43,7 +43,7 @@ bool codificaInstrucao(string linha, long int *instrucaoCodificada){
 	char buffer[32];
 
 	strcpy(buffer, linha.c_str());
-    
+
     //Certifica-se que não há caracteres inválidos
     for(int i=0; buffer[i] != '\0'; i++){
     	if(buffer[i] == '1' || buffer[i] == '0'){
@@ -166,9 +166,9 @@ void menu(Mips *mips){
 
 	            if(codificaInstrucao(linha,&instrucaoCodificada))
 	        		mips->armazenaInstrucao(instrucaoCodificada);
-	        	
+
             }
-            
+
             if(novaOp())
                 menu(mips);
             break;
@@ -178,7 +178,7 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
-            	
+
             }
             if(novaOp())
                 menu(mips);
@@ -192,6 +192,9 @@ void menu(Mips *mips){
             	for(int i=0; i < mips->getQtdInstrucoes(); i++){
             		mips->estagio1();
             		mips->estagio2();
+								mips->estagio3();
+								mips->estagio4();
+								mips->estagio5();
             	}
             }
             if(novaOp())
@@ -202,7 +205,7 @@ void menu(Mips *mips){
             printf("\e[H\e[2J");
             mips->reset();
             cout<<"Reset realizado com sucesso"<<endl;
-            
+
             if(novaOp())
                 menu(mips);
             break;
