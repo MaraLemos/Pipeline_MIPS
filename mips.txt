@@ -1,0 +1,25 @@
+int main(){
+	int a = 5;
+	int b = a - 3;
+	if(a < b){
+		a = b;
+	}else{
+		a = a + b;
+	}
+}
+
+main:
+	addi $s0,$zero,5
+	addi $t0,$zero,3
+	sub $s1,$s0,$t0
+	slt $t1,$s0,$s1		//Recebe 1 se $s0 < $s1
+	beq $t1,$zero,L1	//se t1 = 0 desvia
+	add $s0,$s1,$zero
+L1:
+	add $s0,$s0,$s1
+
+
+
+Ok: add,sub,slt,beq,addi
+
+Falta: and,or,sll,lw,sw,bne,j,jr,jal

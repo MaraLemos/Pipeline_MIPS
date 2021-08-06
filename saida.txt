@@ -1,0 +1,112 @@
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 0
+ALUOp : 00
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 0
+ALUOp : 00
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 1
+ALUOp : 10
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 1
+ALUOp : 10
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 2
+ALUOp : 01
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 1
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 0
+MemtoReg : 2
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 1
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 1
+ALUOp : 10
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
+Contéudo da memória de dados: 
+Sinal de controle estágio 1: 
+pcSrc : 0
+Sinal de controle estágio 2: 
+jump : 0
+Sinais de controle estágio 3: 
+regDst : 1
+ALUOp : 10
+ALUSrc : 1
+Sinais de controle estágio 4: 
+Branch : 0
+MemRead : 0
+MemWrite : 0
+Sinais de controle estágio 5: 
+RegWrite : 1
+MemtoReg : 0
