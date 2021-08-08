@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <climits>
 #include "Componentes.h"
 
 using namespace std;
@@ -34,7 +35,8 @@ class Mips{
 		void reset();
 		void armazenaInstrucao(long int instrucaoCodificada);
 		int getQtdInstrucoes();
-
+		bool existeInstrucao();
+		
 		//Estágios pipeline
 		void estagio1();
 		void estagio2();

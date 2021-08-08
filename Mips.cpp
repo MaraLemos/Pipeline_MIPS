@@ -17,16 +17,17 @@ void Mips::reset(){
 	this->pcSrc = 0;
 	this->clock = 0;
 
-	//Inicia valores dos registradores com zero
+	//Inicia valores dos registradores
 	for(int i=0;i< 32;i++){
-		banco_registradores[i] = 0;
+		banco_registradores[i] = INT_MAX;
 	}
+
+	banco_registradores[0] = 0; //$zero
+	banco_registradores[29] = 128*4; // $sp
 
 	for(int i=0;i<128;i++){
-		memoria_dados[i] = 0;
+		memoria_dados[i] = INT_MAX;
 	}
-
-	banco_registradores[29] = 128*4; // SP
 
 	arquivoSaida.open("saida.txt",ios::out | ios::trunc);
 
@@ -44,6 +45,13 @@ void Mips::reset(){
 
 int Mips::getQtdInstrucoes(){
 	return this->qtdInstrucoes;
+}
+
+bool Mips::existeInstrucao(){
+	if(memoria_instrucoes[pc/4])
+		return true;
+	else
+		return false;
 }
 
 void Mips::armazenaInstrucao(long int instrucao){
@@ -178,31 +186,35 @@ void Mips::estagio1(){
 	long int instrucao = memoria_instrucoes[pc/4];
 
 	cout << "Instrução sendo executada: " << instrucao << endl;
-	cout << "Ciclo de clock atual: " << clock << endl;
+	cout << "Ciclo de clock atual: " << clock << endl << endl;
 	cout << "Conteudo dos registradores no estágio 1: " << endl;
 	for(int i =0;i< 32; i++){
-		cout << registradores[i] << " : " << banco_registradores[i] << endl;
+		if(banco_registradores[i] != INT_MAX)
+			cout << registradores[i] << " : " << banco_registradores[i] << endl;
 	}
+	cout << "Os demais registradores não foram inicializados." << endl << endl;
 
 	if(this->arquivoSaida.is_open()){
 
-		arquivoSaida << "___________________________________________________________________________" << endl;
 		arquivoSaida << "PC: " << pc << endl;
 		arquivoSaida << "Instrução sendo executada: " << instrucao << endl;
-		arquivoSaida << "Ciclo de clock atual: " << clock << endl;
+		arquivoSaida << "Ciclo de clock atual: " << clock << endl  << endl;
 		arquivoSaida << "Conteudo dos registradores no estágio 1: " << endl;
 		for(int i =0;i< 32; i++){
-			arquivoSaida << registradores[i] << " : " << banco_registradores[i] << endl;
+			if(banco_registradores[i] != INT_MAX)
+				arquivoSaida << registradores[i] << " : " << banco_registradores[i] << endl;
 		}
-		arquivoSaida << "Contéudo da memória de dados: " << endl;
+		arquivoSaida << "Os demais registradores não foram inicializados." << endl  << endl;
+
+		arquivoSaida << "\nContéudo da memória de dados: " << endl;
 		for(int i =0;i< 128; i++){
-			if(memoria_dados[i] != 0){
+			if(memoria_dados[i] != INT_MAX){
 				arquivoSaida << "Posição da memória: " << i << " : " << memoria_dados[i] << endl;
 			}
 		}
-		arquivoSaida << "Posições não especificadas estão vazias" << endl;
+		arquivoSaida << "Posições não especificadas estão vazias" << endl  << endl;
 		arquivoSaida << "Sinal de controle estágio 1: " << endl;
-		arquivoSaida << "pcSrc : " << pcSrc << endl;
+		arquivoSaida << "pcSrc : " << pcSrc << endl  << endl;
 	}
 
 	//Incrementa valor de pc
@@ -269,7 +281,7 @@ void Mips::estagio2(){
 	if(arquivoSaida.is_open()){
 
 		arquivoSaida << "Sinal de controle estágio 2: " << endl;
-		arquivoSaida << "jump : " << unidade_controle.jump << endl;
+		arquivoSaida << "jump : " << unidade_controle.jump << endl  << endl;
 	}
 }
 
@@ -311,9 +323,8 @@ void Mips::estagio3() {
 	int op1 = rp2.datars;
 	int op2 = rp2.datart;
 
-	if(rp2.ALUSrc = 1)
+	if(rp2.ALUSrc == 1)
 		op2 = rp2.constant_or_address;
-
 
 	if(ALU_control == 2) // add
 		ALU_result = op1 + op2;
@@ -349,7 +360,7 @@ void Mips::estagio3() {
 		arquivoSaida << "Sinais de controle estágio 3: " << endl;
 		arquivoSaida << "regDst : " << rp2.regDst << endl;
 		arquivoSaida << "ALUOp : " << rp2.ALUOp1 << rp2.ALUOp0 << endl;
-		arquivoSaida << "ALUSrc : " << rp2.ALUSrc << endl;
+		arquivoSaida << "ALUSrc : " << rp2.ALUSrc << endl  << endl;
 	}
 }
 
@@ -376,7 +387,7 @@ void Mips::estagio4() {
 		arquivoSaida << "Sinais de controle estágio 4: " << endl;
 		arquivoSaida << "Branch : " << rp3.Branch << endl;
 		arquivoSaida << "MemRead : " << rp3.MemRead << endl;
-		arquivoSaida << "MemWrite : " << rp3.MemWrite << endl;
+		arquivoSaida << "MemWrite : " << rp3.MemWrite << endl  << endl;
 	}
 }
 
@@ -391,10 +402,28 @@ void Mips::estagio5() {
 			banco_registradores[rp4.rd_rt] = rp4.ALU_result;
 	}
 
+	cout << "Ciclo de clock final: " << clock << endl << endl;
+	cout << "Conteudo dos registradores no estágio 5: " << endl;
+	for(int i =0;i< 32; i++){
+		if(banco_registradores[i] != INT_MAX)
+			cout << registradores[i] << " : " << banco_registradores[i] << endl;
+	}
+	cout << "Os demais registradores não foram inicializados." << endl;
+	cout << "___________________________________________________"<<endl;
+
 	if(arquivoSaida.is_open()){
 
 		arquivoSaida << "Sinais de controle estágio 5: " << endl;
 		arquivoSaida << "RegWrite : " << rp4.RegWrite << endl;
-		arquivoSaida << "MemtoReg : " << rp4.MemtoReg << endl;
+		arquivoSaida << "MemtoReg : " << rp4.MemtoReg << endl << endl;
+
+		arquivoSaida << "Ciclo de clock final: " << clock << endl << endl;
+		arquivoSaida << "Conteudo dos registradores no estágio 5: " << endl;
+		for(int i =0;i< 32; i++){
+			if(banco_registradores[i] != INT_MAX)
+				arquivoSaida << registradores[i] << " : " << banco_registradores[i] << endl;
+		}
+		arquivoSaida << "Os demais registradores não foram inicializados." << endl;
+		arquivoSaida << "___________________________________________________"<<endl;
 	}
 }

@@ -189,7 +189,7 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
-            	for(int i=0; i < mips->getQtdInstrucoes(); i++){
+            	while(mips->existeInstrucao()){
             		mips->estagio1();
             		mips->estagio2();
             		mips->estagio3();
