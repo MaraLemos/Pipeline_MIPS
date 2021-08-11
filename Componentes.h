@@ -9,7 +9,7 @@ struct ID_EX{
 	int rt;
 	int datars;
 	int datart;
-	int constant_or_address;
+	long int constant_or_address;
 
   //WB
   int RegWrite;
