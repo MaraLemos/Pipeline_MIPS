@@ -171,45 +171,14 @@ void Mips::geraSinaisControle(int opcode){
 	}
 }
 
-long int complementoADois(size_t a){
+long int extensorDeSinal(size_t a){
 
 	long int constant_or_address = a;
 	long int aux = (a & 0x00008000) >> 15;
 
 	if(aux == 1){
 
-		if((constant_or_address & 0x00000001) == 1)
-			constant_or_address = (constant_or_address | 0xfffffffe);
-		else if(((constant_or_address & 0x00000002) >> 1) == 1)
-			constant_or_address = (constant_or_address | 0xfffffffc);
-		else if(((constant_or_address & 0x00000004) >> 2) == 1)
-			constant_or_address = (constant_or_address | 0xfffffff8);
-		else if(((constant_or_address & 0x00000008) >> 3) == 1)
-			constant_or_address = (constant_or_address | 0xfffffff0);
-		else if(((constant_or_address & 0x00000010) >> 4) == 1)
-			constant_or_address = (constant_or_address | 0xffffffe0);
-		else if(((constant_or_address & 0x00000020) >> 5) == 1)
-			constant_or_address = (constant_or_address | 0xffffffc0);
-		else if(((constant_or_address & 0x00000040) >> 6) == 1)
-			constant_or_address = (constant_or_address | 0xffffff80);
-		else if(((constant_or_address & 0x00000080) >> 7) == 1)
-			constant_or_address = (constant_or_address | 0xffffff00);
-		else if(((constant_or_address & 0x00000100) >> 8) == 1)
-			constant_or_address = (constant_or_address | 0xfffffe00);
-		else if(((constant_or_address & 0x00000200) >> 9) == 1)
-			constant_or_address = (constant_or_address | 0xfffffc00);
-		else if(((constant_or_address & 0x00000400) >> 10) == 1)
-			constant_or_address = (constant_or_address | 0xfffff800);
-		else if(((constant_or_address & 0x00000800) >> 11) == 1)
-			constant_or_address = (constant_or_address | 0xfffff000);
-		else if(((constant_or_address & 0x00001000) >> 12) == 1)
-			constant_or_address = (constant_or_address | 0xffffe000);
-		else if(((constant_or_address & 0x00002000) >> 13) == 1)
-			constant_or_address = (constant_or_address | 0xffffc000);
-		else if(((constant_or_address & 0x00004000) >> 14) == 1)
-			constant_or_address = (constant_or_address | 0xffff8000);
-		else if(((constant_or_address & 0x00008000) >> 15) == 1)
-			constant_or_address = (constant_or_address | 0xffff0000);
+		constant_or_address = 0xffff0000 + constant_or_address;
 	}
 
 	return constant_or_address;
@@ -285,7 +254,7 @@ void Mips::estagio2(){
 	if(unidade_controle.jump == 1){ //Tipo-J
 
 		banco_registradores[31] = pc; //Registrador $ra
-		pc = (rp1.instrucao & 0xf0000000) + ((rp1.instrucao & 0x03ffffff) << 2); //4 primeiros bites e 26 bites finais
+		pc = (rp1.instrucao & 0xf0000000) + ((rp1.instrucao & 0x03ffffff) << 2);
 
 	}else{
 
@@ -295,7 +264,7 @@ void Mips::estagio2(){
 
 		//Extensor de sinal
 		if(opcode == 8 || opcode == 35 || opcode == 43 || opcode == 4 || opcode == 5){ //Tipo-I
-			constant_or_address = complementoADois(rp1.instrucao & 0x0000ffff);
+			constant_or_address = extensorDeSinal(rp1.instrucao & 0x0000ffff);
 		}else{ //Tipo-R
 			rd = (rp1.instrucao & 0x0000f800) >> 11;
 		}
