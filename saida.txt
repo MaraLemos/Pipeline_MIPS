@@ -1,14 +1,10 @@
 PC: 0
-Instrução sendo executada: 537919493
+Instrução sendo executada: 00100000000100000000000000000011
 Ciclo de clock atual: 1
 
 Conteudo dos registradores no estágio 1: 
 $zero : 0
 Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
 
 Sinal de controle estágio 1: 
 pcSrc : 0
@@ -34,21 +30,23 @@ Ciclo de clock final: 5
 
 Conteudo dos registradores no estágio 5: 
 $zero : 0
-$s0 : 5
+$s0 : 3
+$ra : 537985029
 Os demais registradores não foram inicializados.
+
+Contéudo da memória de dados: 
+Posições não especificadas estão vazias
+
 ___________________________________________________
 PC: 4
-Instrução sendo executada: 537460733
+Instrução sendo executada: 00100000000100010000000000000101
 Ciclo de clock atual: 6
 
 Conteudo dos registradores no estágio 1: 
 $zero : 0
-$s0 : 5
+$s0 : 3
+$ra : 537985029
 Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
 
 Sinal de controle estágio 1: 
 pcSrc : 0
@@ -74,162 +72,42 @@ Ciclo de clock final: 10
 
 Conteudo dos registradores no estágio 5: 
 $zero : 0
-$t0 : -3
-$s0 : 5
+$s0 : 3
+$s1 : 5
+$ra : 134217732
 Os demais registradores não foram inicializados.
+
+Contéudo da memória de dados: 
+Posições não especificadas estão vazias
+
 ___________________________________________________
 PC: 8
-Instrução sendo executada: 34113570
+Instrução sendo executada: 00001000000000000000000000000100
 Ciclo de clock atual: 11
 
 Conteudo dos registradores no estágio 1: 
 $zero : 0
-$t0 : -3
-$s0 : 5
+$s0 : 3
+$s1 : 5
+$ra : 134217732
 Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
 
 Sinal de controle estágio 1: 
 pcSrc : 0
 
-Sinal de controle estágio 2: 
-jump : 0
-
-Sinais de controle estágio 3: 
-regDst : 1
-ALUOp : 10
-ALUSrc : 0
-
-Sinais de controle estágio 4: 
-Branch : 0
-MemRead : 0
-MemWrite : 0
-
-Sinais de controle estágio 5: 
-RegWrite : 1
-MemtoReg : 0
-
-Ciclo de clock final: 15
-
-Conteudo dos registradores no estágio 5: 
-$zero : 0
-$t0 : -3
-$s0 : 5
-$s1 : 8
-Os demais registradores não foram inicializados.
-___________________________________________________
-PC: 12
-Instrução sendo executada: 34687018
-Ciclo de clock atual: 16
-
-Conteudo dos registradores no estágio 1: 
-$zero : 0
-$t0 : -3
-$s0 : 5
-$s1 : 8
-Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
-
-Sinal de controle estágio 1: 
-pcSrc : 0
-
-Sinal de controle estágio 2: 
-jump : 0
-
-Sinais de controle estágio 3: 
-regDst : 1
-ALUOp : 10
-ALUSrc : 0
-
-Sinais de controle estágio 4: 
-Branch : 0
-MemRead : 0
-MemWrite : 0
-
-Sinais de controle estágio 5: 
-RegWrite : 1
-MemtoReg : 0
-
-Ciclo de clock final: 20
-
-Conteudo dos registradores no estágio 5: 
-$zero : 0
-$t0 : -3
-$t1 : 1
-$s0 : 5
-$s1 : 8
-Os demais registradores não foram inicializados.
-___________________________________________________
 PC: 16
-Instrução sendo executada: 287309825
-Ciclo de clock atual: 21
+Instrução sendo executada: 00000010000100010100000000100000
+Ciclo de clock atual: 13
 
 Conteudo dos registradores no estágio 1: 
 $zero : 0
-$t0 : -3
-$t1 : 1
-$s0 : 5
-$s1 : 8
+$s0 : 3
+$s1 : 5
+$ra : 554696706
 Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
 
 Sinal de controle estágio 1: 
 pcSrc : 0
-
-Sinal de controle estágio 2: 
-jump : 0
-
-Sinais de controle estágio 3: 
-regDst : 2
-ALUOp : 01
-ALUSrc : 0
-
-Sinais de controle estágio 4: 
-Branch : 1
-MemRead : 0
-MemWrite : 0
-
-Sinais de controle estágio 5: 
-RegWrite : 0
-MemtoReg : 2
-
-Ciclo de clock final: 25
-
-Conteudo dos registradores no estágio 5: 
-$zero : 0
-$t0 : -3
-$t1 : 1
-$s0 : 5
-$s1 : 8
-Os demais registradores não foram inicializados.
-___________________________________________________
-PC: 24
-Instrução sendo executada: 34701344
-Ciclo de clock atual: 26
-
-Conteudo dos registradores no estágio 1: 
-$zero : 0
-$t0 : -3
-$t1 : 1
-$s0 : 5
-$s1 : 8
-Os demais registradores não foram inicializados.
-
-
-Contéudo da memória de dados: 
-Posições não especificadas estão vazias
-
-Sinal de controle estágio 1: 
-pcSrc : 1
 
 Sinal de controle estágio 2: 
 jump : 0
@@ -248,13 +126,17 @@ Sinais de controle estágio 5:
 RegWrite : 1
 MemtoReg : 0
 
-Ciclo de clock final: 30
+Ciclo de clock final: 17
 
 Conteudo dos registradores no estágio 5: 
 $zero : 0
-$t0 : -3
-$t1 : 1
-$s0 : 13
-$s1 : 8
+$t0 : 8
+$s0 : 3
+$s1 : 5
+$ra : 0
 Os demais registradores não foram inicializados.
+
+Contéudo da memória de dados: 
+Posições não especificadas estão vazias
+
 ___________________________________________________

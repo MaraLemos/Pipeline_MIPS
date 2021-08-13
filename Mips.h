@@ -39,7 +39,7 @@ class Mips{
 		
 		//Estágios pipeline
 		void estagio1();
-		void estagio2();
+		int estagio2();
 		void estagio3();
 		void estagio4();
 		void estagio5();

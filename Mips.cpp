@@ -184,6 +184,26 @@ long int extensorDeSinal(size_t a){
 	return constant_or_address;
 }
 
+string imprimeInstrucao(long int instrucao){
+
+	int val = instrucao;
+
+	string str = "";
+	for(int i = 0; i < 32; i++)
+	    str += "0";
+
+	for(int i = 31; i >= 0; i--){
+
+	    if(val % 2 == 0)
+	    	str[i] = '0';
+	    else
+	    	str[i] = '1';
+	    
+    	val = val / 2;
+	}
+
+	return str;
+}
 void Mips::estagio1(){
 
 	clock++;
@@ -197,7 +217,7 @@ void Mips::estagio1(){
 	//Lê memória de instruções
 	long int instrucao = memoria_instrucoes[pc/4];
 
-	cout << "Instrução sendo executada: " << instrucao << endl;
+	cout << "Instrução sendo executada: " << imprimeInstrucao(instrucao) << endl;
 	cout << "Ciclo de clock atual: " << clock << endl << endl;
 	cout << "Conteudo dos registradores no estágio 1: " << endl;
 	for(int i =0;i< 32; i++){
@@ -209,7 +229,7 @@ void Mips::estagio1(){
 	if(this->arquivoSaida.is_open()){
 
 		arquivoSaida << "PC: " << pc << endl;
-		arquivoSaida << "Instrução sendo executada: " << instrucao << endl;
+		arquivoSaida << "Instrução sendo executada: " << imprimeInstrucao(instrucao) << endl;
 		arquivoSaida << "Ciclo de clock atual: " << clock << endl  << endl;
 		arquivoSaida << "Conteudo dos registradores no estágio 1: " << endl;
 		for(int i =0;i< 32; i++){
@@ -218,13 +238,6 @@ void Mips::estagio1(){
 		}
 		arquivoSaida << "Os demais registradores não foram inicializados." << endl  << endl;
 
-		arquivoSaida << "\nContéudo da memória de dados: " << endl;
-		for(int i =0;i< 128; i++){
-			if(memoria_dados[i] != INT_MAX){
-				arquivoSaida << "Posição da memória: " << i << " : " << memoria_dados[i] << endl;
-			}
-		}
-		arquivoSaida << "Posições não especificadas estão vazias" << endl  << endl;
 		arquivoSaida << "Sinal de controle estágio 1: " << endl;
 		arquivoSaida << "pcSrc : " << pcSrc << endl  << endl;
 	}
@@ -237,9 +250,12 @@ void Mips::estagio1(){
 	rp1.instrucao = instrucao;
 }
 
-void Mips::estagio2(){
+int Mips::estagio2(){
 
 	clock++;
+
+	if((pc/4) <= 128)
+		banco_registradores[31] = memoria_instrucoes[pc/4]; //Registrador $ra
 
 	//Gera sinais de controle
 	int opcode = (rp1.instrucao & 0xfc000000) >> 26;
@@ -253,8 +269,8 @@ void Mips::estagio2(){
 	//Desvio incondicional
 	if(unidade_controle.jump == 1){ //Tipo-J
 
-		banco_registradores[31] = pc; //Registrador $ra
 		pc = (rp1.instrucao & 0xf0000000) + ((rp1.instrucao & 0x03ffffff) << 2);
+		return 1;
 
 	}else{
 
@@ -274,8 +290,9 @@ void Mips::estagio2(){
 	//Armazena informações em registrador ID/EX
 	rp2.rd = rd;
 	rp2.rt = rt;
-	rp2.datars = banco_registradores[rs];
-	rp2.datart = banco_registradores[rt];
+	rp2.datars = (banco_registradores[rs] == INT_MAX) ? rs : banco_registradores[rs]; //Tratamento para instruções sw e lw
+	rp2.datart = (banco_registradores[rt] == INT_MAX) ? rt : banco_registradores[rt];
+	
 	rp2.constant_or_address = constant_or_address;
 
 	//WB
@@ -296,6 +313,7 @@ void Mips::estagio2(){
 		arquivoSaida << "Sinal de controle estágio 2: " << endl;
 		arquivoSaida << "jump : " << unidade_controle.jump << endl  << endl;
 	}
+	return 0;
 }
 
 void Mips::estagio3() {
@@ -338,6 +356,7 @@ void Mips::estagio3() {
 
 	if(rp2.ALUSrc == 1)
 		op2 = rp2.constant_or_address;
+
 
 	if(ALU_control == 2) // add
 		ALU_result = op1 + op2;
@@ -409,10 +428,13 @@ void Mips::estagio5() {
 	clock++;
 
 	if(rp4.RegWrite == 1){
-		if(rp4.MemtoReg == 1)
-			banco_registradores[rp4.rd_rt] = rp4.data;
-		else
-			banco_registradores[rp4.rd_rt] = rp4.ALU_result;
+		if(rp4.MemtoReg == 1){
+			if(rp4.rd_rt != 29)
+				banco_registradores[rp4.rd_rt] = rp4.data;
+		}else{
+			if(rp4.rd_rt != 29)
+				banco_registradores[rp4.rd_rt] = rp4.ALU_result;
+		}
 	}
 
 	cout << "Ciclo de clock final: " << clock << endl << endl;
@@ -437,6 +459,15 @@ void Mips::estagio5() {
 				arquivoSaida << registradores[i] << " : " << banco_registradores[i] << endl;
 		}
 		arquivoSaida << "Os demais registradores não foram inicializados." << endl;
+
+		arquivoSaida << "\nContéudo da memória de dados: " << endl;
+		for(int i =0;i< 128; i++){
+			if(memoria_dados[i] != INT_MAX){
+				arquivoSaida << "Posição da memória: " << i << " : " << memoria_dados[i] << endl;
+			}
+		}
+		arquivoSaida << "Posições não especificadas estão vazias" << endl  << endl;
+
 		arquivoSaida << "___________________________________________________"<<endl;
 	}
 }

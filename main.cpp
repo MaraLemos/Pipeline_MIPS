@@ -178,7 +178,21 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
+            	int i = 1;
+            	while(i != 0 && mips->existeInstrucao()){
 
+        			mips->estagio1();
+        			if(mips->estagio2() == 0){
+        				mips->estagio3();
+	            		mips->estagio4();
+	            		mips->estagio5();
+        			}
+
+            		if(mips->existeInstrucao()){
+            			cout << "Executar proxima instrução? (1/0)" << endl;
+            			cin >> i;
+            		}
+            	}
             }
             if(novaOp())
                 menu(mips);
@@ -191,10 +205,11 @@ void menu(Mips *mips){
             }else{
             	while(mips->existeInstrucao()){
             		mips->estagio1();
-            		mips->estagio2();
-            		mips->estagio3();
-            		mips->estagio4();
-            		mips->estagio5();
+        			if(mips->estagio2() == 0){
+        				mips->estagio3();
+	            		mips->estagio4();
+	            		mips->estagio5();
+        			}
             	}
             }
             if(novaOp())

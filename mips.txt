@@ -1,25 +1,54 @@
 int main(){
-	int a = 5;
+	int a = -5;
 	int b = a - 3;
 	if(a < b){
 		a = b;
 	}else{
 		a = a + b;
 	}
+	if(a == -3){
+		exemplo(a,b);
+	}else{
+
+	}
+}
+
+int exemplo(int a,int b){
+	b = a << 2;
+	return a - b;
 }
 
 main:
-	addi $s0,$zero,5
-	addi $t0,$zero,3
+	addi $s0,$zero,-5
+	addi $t0,$zero,-3
 	sub $s1,$s0,$t0
-	slt $t1,$s0,$s1		//Recebe 1 se $s0 < $s1
-	beq $t1,$zero,L1	//se t1 = 0 desvia
+	slt $t1,$s0,$s1		#Recebe 1 se $s0 < $s1
+	beq $t1,$zero,L1	#se t1 = 0 desvia
 	add $s0,$s1,$zero
 L1:
 	add $s0,$s0,$s1
 
+addi $t2,$zero,-3
+bne $s0,$t2,L2	#Se forem diferentes pula para L2
+addi $sp,$sp,-8
+sw $ra,4($sp)
+sw $s0,0($sp)
+addi $a0,$s0,$zero
+addi $a1,$s1,$zero
+jal exemplo
+
+L2:
+
+exemplo:
+	sub $s0,$a0,$a1
+	sll $a1,$a0,2
+	add $v0,$s0,$zero
+	lw $s0,0($sp)
+	lw $ra,4($sp)
+	addi $sp,$sp,8
+	jr $ra
 
 
-Ok: add,sub,slt,beq,addi
+Ok: add,sub,slt,beq,addi, bne,sll,lw,sw,
 
-Falta: and,or,sll,lw,sw,bne,j,jr,jal
+Falta: and,or,j,jr,jal
