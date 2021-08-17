@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Mips.h"
+#include "Converte.h"
 
 using namespace std;
 
@@ -217,7 +218,7 @@ void Mips::estagio1(){
 	//Lê memória de instruções
 	long int instrucao = memoria_instrucoes[pc/4];
 
-	cout << "Instrução sendo executada: " << imprimeInstrucao(instrucao) << endl;
+	cout << "Instrução sendo executada: " << converteInstrucao(imprimeInstrucao(instrucao)) << endl;
 	cout << "Ciclo de clock atual: " << clock << endl << endl;
 	cout << "Conteudo dos registradores no estágio 1: " << endl;
 	for(int i =0;i< 32; i++){
@@ -254,9 +255,6 @@ int Mips::estagio2(){
 
 	clock++;
 
-	if((pc/4) <= 128)
-		banco_registradores[31] = memoria_instrucoes[pc/4]; //Registrador $ra
-
 	//Gera sinais de controle
 	int opcode = (rp1.instrucao & 0xfc000000) >> 26;
 	geraSinaisControle(opcode);
@@ -268,8 +266,12 @@ int Mips::estagio2(){
 
 	//Desvio incondicional
 	if(unidade_controle.jump == 1){ //Tipo-J
-
-		pc = (rp1.instrucao & 0xf0000000) + ((rp1.instrucao & 0x03ffffff) << 2);
+		if(opcode == 2) // j
+			pc = (rp1.instrucao & 0xf0000000) | ((rp1.instrucao & 0x03ffffff) << 2);
+		else if(opcode == 3) { // jal
+			banco_registradores[31] = pc; //Registrador $ra
+			pc = (rp1.instrucao & 0x03ffffff) << 2;
+		}
 		return 1;
 
 	}else{
@@ -346,6 +348,8 @@ void Mips::estagio3() {
 			ALU_control = 1;
 		else if(funct == 42) // slt
 			ALU_control = 7;
+		else if(funct == 0)
+			ALU_control = 4; 
 	}
 
 	// gera resultado da ALU
@@ -368,6 +372,10 @@ void Mips::estagio3() {
 		ALU_result = op1 | op2;
 	else if(ALU_control == 7) // slt
 		ALU_result = (op1 < op2) ? 1 : 0;
+	else if(ALU_control == 4) {
+		int sham = (rp1.instrucao & 0x000007c0);
+		ALU_result = (op2 << sham);
+	}
 
 	//armazena informações em registrador EX_MEM
 	rp3.pc = rp2.pc + (rp2.constant_or_address << 2);
@@ -401,6 +409,9 @@ void Mips::estagio4() {
 	clock++;
 
 	pcSrc = (rp3.Branch && rp3.ALU_zero) ? 1 : 0;
+
+	cout << "PCSRC = " << pcSrc << endl;
+	cout << "PC = " << rp3.pc << endl;
 
 	if(rp3.MemWrite == 1)
 		this->memoria_dados[rp3.ALU_result] = rp3.datart;
