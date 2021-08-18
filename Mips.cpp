@@ -80,7 +80,7 @@ void Mips::geraSinaisControle(int opcode){
 	switch(opcode){
 
         case 0: //add,sub,and,or,slt,sll, jr
-        unidade_controle.regDst = 1;
+        	unidade_controle.regDst = 1;
 		    unidade_controle.ALUOp1 = 1;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 0;
@@ -185,7 +185,7 @@ void Mips::geraSinaisControle(int opcode){
 	}
 }
 
-long int extensorDeSinal(size_t a){
+long int Mips::extensorDeSinal(size_t a){
 
 	long int constant_or_address = a;
 	long int aux = (a & 0x00008000) >> 15;
@@ -218,6 +218,7 @@ string imprimeInstrucao(long int instrucao){
 
 	return str;
 }
+
 void Mips::estagio1(){
 
 	clock++;
@@ -290,15 +291,15 @@ int Mips::estagio2(){
 	}else{
 
 		//Lê registradores
-		rs = (rp1.instrucao & 0x03e00000) >> 21;
-		rt = (rp1.instrucao & 0x001f0000) >> 16;
+		rs = (rp1.instrucao & 0x03e00000) >> 21; //Bits 21 a 25
+		rt = (rp1.instrucao & 0x001f0000) >> 16; //Bits 16 a 20
 
 		//Extensor de sinal
-		if(opcode == 8 || opcode == 35 || opcode == 43 || opcode == 4 || opcode == 5){ //Tipo-I
-			constant_or_address = extensorDeSinal(rp1.instrucao & 0x0000ffff);
-		}else{ //Tipo-R
-			rd = (rp1.instrucao & 0x0000f800) >> 11;
-		}
+		constant_or_address = extensorDeSinal(rp1.instrucao & 0x0000ffff);
+
+		if(opcode == 0) //Tipo-R
+			rd = (rp1.instrucao & 0x0000f800) >> 11; //Bits 12 a 16
+		
 	}
 
 
@@ -349,7 +350,7 @@ void Mips::estagio3() {
 		ALU_control = 6;
 
 	else if(ALUOp0 == 0 && ALUOp1 == 1) { // Tipo-R
-		int funct = (rp1.instrucao & 0x3f);
+		int funct = (rp2.constant_or_address & 0x3f);
 
 		if(funct == 32) // add
 			ALU_control = 2;
@@ -361,7 +362,7 @@ void Mips::estagio3() {
 			ALU_control = 1;
 		else if(funct == 42) // slt
 			ALU_control = 7;
-		else if(funct == 0)
+		else if(funct == 0) //sll
 			ALU_control = 4; 
 	}
 
@@ -386,16 +387,16 @@ void Mips::estagio3() {
 	else if(ALU_control == 7) // slt
 		ALU_result = (op1 < op2) ? 1 : 0;
 	else if(ALU_control == 4) {
-		int sham = (rp1.instrucao & 0x000007c0);
+		int sham = (rp2.constant_or_address & 0x000007c0); //Bits 6 a 11
 		ALU_result = (op2 << sham);
 	}
 
 	//armazena informações em registrador EX_MEM
 	rp3.pc = rp2.pc + (rp2.constant_or_address << 2);
 	if(rp2.regDst == 0)
-		rp3.rd_rt = rp2.rt;
+		rp3.rd_rt = rp2.rt; //Instrução Tipo-I
 	else if(rp2.regDst == 1)
-		rp3.rd_rt = rp2.rd;
+		rp3.rd_rt = rp2.rd; //Instrução Tipo-R
 	rp3.ALU_result = ALU_result;
 	rp3.ALU_zero = (ALU_result == 0 || ALU_control == 6) ? 1 : 0; // não tenho certeza
 	rp3.datart = rp2.datart;

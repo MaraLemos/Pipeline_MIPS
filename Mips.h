@@ -26,7 +26,8 @@ class Mips{
 		MEM_WB rp4;
 
 		void geraSinaisControle(int opcode);
-
+		long int extensorDeSinal(size_t a);
+		
 		ofstream arquivoSaida;
 
 	public:
