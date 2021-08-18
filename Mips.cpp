@@ -5,15 +5,15 @@
 using namespace std;
 
 Mips::Mips(){
-	reset();
+	inicia();
 }
 
 Mips::~Mips(){
 	arquivoSaida.close();
 }
 
-void Mips::reset(){
-	this->qtdInstrucoes = 0;
+void Mips::inicia(){
+
 	this->pc = 0;
 	this->pcSrc = 0;
 	this->clock = 0;
@@ -41,6 +41,19 @@ void Mips::reset(){
     unidade_controle.RegWrite = 2;
     unidade_controle.MemtoReg = 2;
     unidade_controle.jump = 2;
+    
+}
+
+void Mips::reset(){
+
+	inicia();
+
+	this->qtdInstrucoes = 0;
+	
+	for(int i=0;i<128;i++){
+		memoria_instrucoes[i] = INT_MAX;
+	}
+    
 }
 
 int Mips::getQtdInstrucoes(){
@@ -48,7 +61,7 @@ int Mips::getQtdInstrucoes(){
 }
 
 bool Mips::existeInstrucao(){
-	if(memoria_instrucoes[pc/4])
+	if(pc/4 < this->qtdInstrucoes && memoria_instrucoes[pc/4] != INT_MAX)
 		return true;
 	else
 		return false;
@@ -409,9 +422,6 @@ void Mips::estagio4() {
 	clock++;
 
 	pcSrc = (rp3.Branch && rp3.ALU_zero) ? 1 : 0;
-
-	cout << "PCSRC = " << pcSrc << endl;
-	cout << "PC = " << rp3.pc << endl;
 
 	if(rp3.MemWrite == 1)
 		this->memoria_dados[rp3.ALU_result] = rp3.datart;

@@ -32,6 +32,7 @@ class Mips{
 	public:
 		Mips();
 		~Mips();
+		void inicia();
 		void reset();
 		void armazenaInstrucao(long int instrucaoCodificada);
 		int getQtdInstrucoes();

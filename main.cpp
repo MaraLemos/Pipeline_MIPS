@@ -40,12 +40,12 @@ bool codificaInstrucao(string linha, long int *instrucaoCodificada){
 	int instrucao[32];
 	int j = 31;
 
-	char buffer[32];
+	char buffer[2000];
 
 	strcpy(buffer, linha.c_str());
 
     //Certifica-se que não há caracteres inválidos
-    for(int i=0; buffer[i] != '\0'; i++){
+    for(int i=0; i < 32; i++){
     	if(buffer[i] == '1' || buffer[i] == '0'){
     		instrucao[j] = buffer[i] - '0';
     		j--;
@@ -178,6 +178,8 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
+            	mips->inicia();
+
             	int i = 1;
             	while(i != 0 && mips->existeInstrucao()){
 
@@ -203,6 +205,8 @@ void menu(Mips *mips){
             if(mips->getQtdInstrucoes() == 0){ //Se memoria estiver vazia
                 cout << "Entre com as instruções através de (a) ou (b) no menu inicial." << endl;
             }else{
+            	mips->inicia();
+
             	while(mips->existeInstrucao()){
             		mips->estagio1();
         			if(mips->estagio2() == 0){
