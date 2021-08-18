@@ -40,6 +40,24 @@ string decBin(long int val){
 	return bin;
 }
 
+int complemento2(string str) {
+  if(str[0] == '1') {
+    bool primerio1 = false;
+    for(int i = str.size()-1; i >= 0; i--) {
+      if(primerio1) {
+        if(str[i] == '0')
+          str[i] = '1';
+        else
+          str[i] = '0';
+      }
+      
+      if(str[i] == '1')
+        primerio1 = true;
+    }
+    return -binDec(str);
+  }
+  return binDec(str);
+}
 
 string converteInstrucao(int val) {
     string str = decBin(val);
@@ -87,7 +105,7 @@ string converteInstrucao(int val) {
     else if(op == "001000") { // addi
         string rs = registradores[binDec(str.substr(6, 5))];
         string rt = registradores[binDec(str.substr(11, 5))];
-        int imm = binDec(str.substr(16, 16));
+        int imm = complemento2(str.substr(16, 16));
 
         instrucao += "addi " + rt + "," + rs + "," + to_string(imm);
     }
@@ -118,7 +136,7 @@ string converteInstrucao(int val) {
         }
         else if(funct == "000000") { // sll
             int sa = binDec(str.substr(21, 5));
-            instrucao += "sll " + rd + "," + rs + "," + rt;
+            instrucao += "sll " + rd + "," + rt + "," + to_string(sa);
         }
     }
 
