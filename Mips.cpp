@@ -198,27 +198,6 @@ long int Mips::extensorDeSinal(size_t a){
 	return constant_or_address;
 }
 
-string imprimeInstrucao(long int instrucao){
-
-	int val = instrucao;
-
-	string str = "";
-	for(int i = 0; i < 32; i++)
-	    str += "0";
-
-	for(int i = 31; i >= 0; i--){
-
-	    if(val % 2 == 0)
-	    	str[i] = '0';
-	    else
-	    	str[i] = '1';
-	    
-    	val = val / 2;
-	}
-
-	return str;
-}
-
 void Mips::estagio1(){
 
 	clock++;
@@ -232,7 +211,7 @@ void Mips::estagio1(){
 	//Lê memória de instruções
 	long int instrucao = memoria_instrucoes[pc/4];
 
-	cout << "Instrução sendo executada: " << converteInstrucao(imprimeInstrucao(instrucao)) << endl;
+	cout << "Instrução sendo executada: " << converteInstrucao(instrucao) << endl;
 	cout << "Ciclo de clock atual: " << clock << endl << endl;
 	cout << "Conteudo dos registradores no estágio 1: " << endl;
 	for(int i =0;i< 32; i++){
@@ -244,7 +223,7 @@ void Mips::estagio1(){
 	if(this->arquivoSaida.is_open()){
 
 		arquivoSaida << "PC: " << pc << endl;
-		arquivoSaida << "Instrução sendo executada: " << imprimeInstrucao(instrucao) << endl;
+		arquivoSaida << "Instrução sendo executada: " << converteInstrucao(instrucao) << endl;
 		arquivoSaida << "Ciclo de clock atual: " << clock << endl  << endl;
 		arquivoSaida << "Conteudo dos registradores no estágio 1: " << endl;
 		for(int i =0;i< 32; i++){
@@ -387,7 +366,7 @@ void Mips::estagio3() {
 	else if(ALU_control == 7) // slt
 		ALU_result = (op1 < op2) ? 1 : 0;
 	else if(ALU_control == 4) {
-		int sham = (rp2.constant_or_address & 0x000007c0); //Bits 6 a 11
+		int sham = (rp2.constant_or_address & 0x000007c0) >> 6; //Bits 6 a 11
 		ALU_result = (op2 << sham);
 	}
 

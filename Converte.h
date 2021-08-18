@@ -12,7 +12,7 @@ string registradores[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$
 
 
 int binDec(string str) {
-    int dec = 0;
+    long int dec = 0;
     
     for(int i = 0; i < str.size(); i++) {
       string aux = "";
@@ -23,7 +23,26 @@ int binDec(string str) {
     return dec;
 }
 
-string converteInstrucao(string str) {
+string decBin(long int val){
+	string bin = "";
+	
+    for(int i = 0; i < 32; i++)
+	    bin += "0";
+
+	for(int i = 31; i >= 0; i--){
+	    if(val % 2 == 0)
+	    	bin[i] = '0';
+	    else
+	    	bin[i] = '1';
+	    
+    	val = val / 2;
+	}
+	return bin;
+}
+
+
+string converteInstrucao(int val) {
+    string str = decBin(val);
     string instrucao = "";
     string op = str.substr(0, 6);
     
