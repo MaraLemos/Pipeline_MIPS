@@ -1,10 +1,10 @@
 struct IF_ID{
-	int pc;
+	long int pc;
 	long int instrucao;
 };
 
 struct ID_EX{
-	int pc;
+	long int pc;
 	int rd;
 	int rt;
 	int datars;
@@ -26,7 +26,7 @@ struct ID_EX{
 };
 
 struct EX_MEM{
-	int pc;
+	long int pc;
   int rd_rt;
   int ALU_result;
   int ALU_zero;

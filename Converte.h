@@ -59,7 +59,7 @@ int complemento2(string str) {
   return binDec(str);
 }
 
-string converteInstrucao(int val) {
+string converteInstrucao(long int val) {
     string str = decBin(val);
     string instrucao = "";
     string op = str.substr(0, 6);

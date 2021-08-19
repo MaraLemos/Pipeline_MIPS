@@ -6,6 +6,8 @@ using namespace std;
 
 Mips::Mips(){
 	inicia();
+
+	arquivoSaida.open("saida.txt",ios::out | ios::trunc);
 }
 
 Mips::~Mips(){
@@ -28,8 +30,6 @@ void Mips::inicia(){
 	for(int i=0;i<128;i++){
 		memoria_dados[i] = INT_MAX;
 	}
-
-	arquivoSaida.open("saida.txt",ios::out | ios::trunc);
 
 	unidade_controle.regDst = 2;
     unidade_controle.ALUOp1 = 2;
@@ -256,15 +256,16 @@ int Mips::estagio2(){
 	int rd = 0, rt = 0, rs;
 
 	rp2.pc = rp1.pc;
-
+	
 	//Desvio incondicional
 	if(unidade_controle.jump == 1){ //Tipo-J
 		if(opcode == 2) // j
 			pc = (rp1.instrucao & 0xf0000000) | ((rp1.instrucao & 0x03ffffff) << 2);
 		else if(opcode == 3) { // jal
-			banco_registradores[31] = pc; //Registrador $ra
+			banco_registradores[31] = rp1.pc; //Registrador $ra
 			pc = (rp1.instrucao & 0x03ffffff) << 2;
 		}
+		pcSrc = 0;
 		return 1;
 
 	}else{
@@ -272,6 +273,16 @@ int Mips::estagio2(){
 		//Lê registradores
 		rs = (rp1.instrucao & 0x03e00000) >> 21; //Bits 21 a 25
 		rt = (rp1.instrucao & 0x001f0000) >> 16; //Bits 16 a 20
+
+		//Tratando instrução do tipo jr
+		if(opcode == 0){
+			int funct = (rp1.instrucao & 0x3f);
+			if(funct == 8){
+				pc = banco_registradores[rs];
+				pcSrc = 0;
+				return 1;
+			}
+		}
 
 		//Extensor de sinal
 		constant_or_address = extensorDeSinal(rp1.instrucao & 0x0000ffff);
@@ -342,7 +353,7 @@ void Mips::estagio3() {
 		else if(funct == 42) // slt
 			ALU_control = 7;
 		else if(funct == 0) //sll
-			ALU_control = 4; 
+			ALU_control = 4;
 	}
 
 	// gera resultado da ALU
@@ -377,7 +388,7 @@ void Mips::estagio3() {
 	else if(rp2.regDst == 1)
 		rp3.rd_rt = rp2.rd; //Instrução Tipo-R
 	rp3.ALU_result = ALU_result;
-	rp3.ALU_zero = (ALU_result == 0 || ALU_control == 6) ? 1 : 0; // não tenho certeza
+	rp3.ALU_zero = (ALU_result == 0) ? 1 : 0;
 	rp3.datart = rp2.datart;
 
 	//WB

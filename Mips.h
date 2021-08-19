@@ -12,7 +12,8 @@ using namespace std;
 class Mips{
 
 	private:
-		int pc, qtdInstrucoes, pcSrc, clock;
+		long int pc;
+		int qtdInstrucoes, pcSrc, clock;
 		long int memoria_instrucoes[128]; //512bytes == 4096 bits
 		long int memoria_dados[128];
 		int banco_registradores[32];

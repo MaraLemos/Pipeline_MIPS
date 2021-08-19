@@ -1,0 +1,33 @@
+main:
+	addi $s0,$zero,-5
+	addi $t0,$zero,-3
+	addi $s3,$zero,20
+	sub $s1,$s0,$t0
+	slt $t1,$s0,$s1	
+	beq $t1,$zero,L1
+	addi $s4,$zero,3
+	add $s2,$zero,$zero
+for:
+	slt $t0,$s2,$s4
+	bne $t0,$zero,L2
+	addi $s3,$s3,2
+	addi $s2,$s2,1
+	j for
+L2:
+	jal exemplo
+	addi $t4,$zer0,4
+	j L3
+exemplo:
+	addi $sp,$sp,-4
+	sw $ra,4($sp)
+	lw $ra,4($sp)
+	addi $sp,$sp,4
+	jr $ra
+L1:
+	add $s0,$zero,$s1
+L3:
+	addi $t3,$zero,3
+
+
+
+Falta: and,or,sll,
