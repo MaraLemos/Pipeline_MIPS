@@ -133,7 +133,7 @@ void Mips::geraSinaisControle(int opcode){
 
         case 5: // bne
 				unidade_controle.regDst = 2; //O num 2 representa o não importa
-		    unidade_controle.ALUOp1 = 0;
+		    unidade_controle.ALUOp1 = 1;
 		    unidade_controle.ALUOp0 = 1;
 		    unidade_controle.ALUSrc = 0;
 		    unidade_controle.Branch = 1;
@@ -266,6 +266,8 @@ int Mips::estagio2(){
 			pc = (rp1.instrucao & 0x03ffffff) << 2;
 		}
 		pcSrc = 0;
+		clock += 2;
+		estagio5();
 		return 1;
 
 	}else{
@@ -280,6 +282,8 @@ int Mips::estagio2(){
 			if(funct == 8){
 				pc = banco_registradores[rs];
 				pcSrc = 0;
+				clock += 2;
+				estagio5();
 				return 1;
 			}
 		}
@@ -339,6 +343,9 @@ void Mips::estagio3() {
 	else if(ALUOp0 == 1 && ALUOp1 == 0) // beq
 		ALU_control = 6;
 
+	else if(ALUOp0 == 1 && ALUOp1 == 1) //bne
+		ALU_control = 6;
+
 	else if(ALUOp0 == 0 && ALUOp1 == 1) { // Tipo-R
 		int funct = (rp2.constant_or_address & 0x3f);
 
@@ -388,7 +395,11 @@ void Mips::estagio3() {
 	else if(rp2.regDst == 1)
 		rp3.rd_rt = rp2.rd; //Instrução Tipo-R
 	rp3.ALU_result = ALU_result;
-	rp3.ALU_zero = (ALU_result == 0) ? 1 : 0;
+
+	if(ALUOp0 == 1 && ALUOp1 == 0)
+		rp3.ALU_zero = (ALU_result == 0) ? 1 : 0;
+	else if(ALUOp0 == 1 && ALUOp1 == 1)
+		rp3.ALU_zero = (ALU_result != 0) ? 1 : 0;
 	rp3.datart = rp2.datart;
 
 	//WB

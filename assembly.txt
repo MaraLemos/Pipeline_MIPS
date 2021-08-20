@@ -1,3 +1,5 @@
+Código referente ao arquivo teste.txt
+
 main:
 	addi $s0,$zero,-5
 	addi $t0,$zero,-3
@@ -9,14 +11,14 @@ main:
 	add $s2,$zero,$zero
 for:
 	slt $t0,$s2,$s4
-	bne $t0,$zero,L2
+	beq $t0,$zero,L2
 	addi $s3,$s3,2
 	addi $s2,$s2,1
 	j for
 L2:
 	jal exemplo
 	addi $t4,$zer0,4
-	j L3
+	bne $t4,$zero,L3
 exemplo:
 	addi $sp,$sp,-4
 	sw $ra,4($sp)
@@ -26,8 +28,7 @@ exemplo:
 L1:
 	add $s0,$zero,$s1
 L3:
-	addi $t3,$zero,3
-
-
-
-Falta: and,or,sll,
+	addi $t3,$zero,1
+	and $t3,$t3,$t1
+	or $t3,$t3,$zero
+	sll $s3,$s3,2
