@@ -8,5 +8,5 @@ Simulador do pipeline da arquitetura MIPS.
 - Mara de Lemos Gomes
 
 ## Compilação e Execução
-g++ *.cpp -I .\  -o mips.exe -finput-charset=utf-8 </br>
-mips.exe
+g++ -O3 *.cpp -o mips.exe </br>
+./mips.exe
