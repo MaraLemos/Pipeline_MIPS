@@ -145,7 +145,7 @@ void Mips::geraSinaisControle(int opcode){
         break;
 
         case 8: // addi
-				unidade_controle.regDst = 0;
+			unidade_controle.regDst = 0;
 		    unidade_controle.ALUOp1 = 0;
 		    unidade_controle.ALUOp0 = 0;
 		    unidade_controle.ALUSrc = 1;
@@ -467,6 +467,14 @@ void Mips::estagio5() {
 			cout << registradores[i] << " : " << banco_registradores[i] << endl;
 	}
 	cout << "Os demais registradores não foram inicializados." << endl;
+
+	cout << "\nContéudo da memória de dados: " << endl;
+	for(int i =0;i< 128; i++){
+		if(memoria_dados[i] != INT_MAX){
+			cout << "Posição da memória: " << i << " : " << memoria_dados[i] << endl;
+		}
+	}
+	cout << "Posições não especificadas estão vazias" << endl  << endl;
 	cout << "___________________________________________________"<<endl;
 
 	if(arquivoSaida.is_open()){
